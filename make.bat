@@ -1,7 +1,7 @@
 @echo on
 set PY_FILE=of_editor.py
 set PROJECT_NAME=OF Editor 2007-2010
-set VERSION=1.0.0
+set VERSION=1.0.1
 set FILE_VERSION=file_version_info.txt
 set EXTRA_ARG=--add-data=resources/img/*;resources/img --add-data=resources/demonyms.csv;resources --add-data=resources/default.yaml;resources 
 set ICO_DIR=resources/img/pes_indie.ico
