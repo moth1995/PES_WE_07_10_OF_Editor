@@ -1,4 +1,3 @@
-import struct
 from .utils import common_functions, rgb_to_hex, hex_to_rgb, zero_fill_right_shift
 from .utils.constants import *
 
