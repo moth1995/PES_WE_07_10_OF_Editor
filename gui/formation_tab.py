@@ -3,7 +3,7 @@ from tkinter.ttk import Combobox
 from editor import Team
 from .custom_widgets import FormationFrame
 from PIL import Image
-from editor.utils.common_functions import resource_path
+from editor.utils import common_functions
 from editor.utils.constants import *
 
 class FormationTab(Frame):
@@ -18,7 +18,7 @@ class FormationTab(Frame):
         original_width = 50
         original_heigh = 100
         factor = 5
-        field = Image.open(resource_path("resources/img/field_1.png")).convert("RGB")
+        field = Image.open(common_functions.resource_path("resources/img/field_1.png")).convert("RGB")
         self.players_names_list = [player.name for player in self.team.players[:PLAYERS_IN_TEAM]]
         
         self.main_frame = Frame(self)

@@ -1,18 +1,7 @@
 from tkinter import Canvas, Scrollbar, Tk, Label, Frame
 from PIL import ImageTk, Image, ImageDraw
-import os, sys
 from editor.utils.constants import *
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
+from editor.utils import common_functions
 
 class TableExampleApp(Tk):
     def __init__(self):
@@ -37,7 +26,7 @@ class FormationExampleApp(Tk):
         original_width = 50
         original_heigh = 100
         factor = 5
-        field = Image.open(resource_path("resources/img/field_1.png")).convert("RGB")
+        field = Image.open(common_functions.resource_path("resources/img/field_1.png")).convert("RGB")
 
         f = FormationFrame(self, field, original_width, original_heigh, factor, pes_coordinates)
         f.pack()
@@ -212,7 +201,7 @@ class FormationFrame(Frame):
         for i in range(PLAYERS_IN_TEAM):
             pos_name = self.position_to_string(positions_idx[i])
             self.pos_names.append(pos_name)
-            img = Image.open(resource_path("resources/img/circle.png")).convert("RGBA")
+            img = Image.open(common_functions.resource_path("resources/img/circle.png")).convert("RGBA")
             img = img.resize((20,20))
             temp_draw = ImageDraw.Draw(img)
             # Add Text to an image
