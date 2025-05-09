@@ -839,7 +839,7 @@ class PlayerStatsWindow(Toplevel):
         """
         
         player.appearance.hair.set_value(common_functions.intTryParse(self.player_hair_idx_int_var.get()))
-        player.appearance.special_hairstyles_2.set_value(NO_YES[self.player_special_hairstyles_2_var.get()])
+        #player.appearance.special_hairstyles_2.set_value(NO_YES[self.player_special_hairstyles_2_var.get()])
 
         player.appearance.height.set_value(common_functions.intTryParse(self.player_height_entry.get()))
         player.appearance.weight.set_value(common_functions.intTryParse(self.player_weight_entry.get()))
