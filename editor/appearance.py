@@ -79,7 +79,7 @@ class Appearance:
         # The variable below will get the Hairstyle idx but we have to return many other variables such a hair type, shape, front, volume, darkness and bandana
         # Millions thanks to Pato_lucas18 for this code who save me from doom
         
-        self.hair =  Stat(player, 45, 0, 2047, "Hairstyle ID", min=0, max=2047)#"{stat} + 1 if {normalize} else {stat} - 1", 1, 4096)# + 1
+        self.hair =  Stat(player, 45, 0, 4095, "Hairstyle ID", min=0, max=4095)#"{stat} + 1 if {normalize} else {stat} - 1", 1, 4096)# + 1
         #self.special_hairstyles_2 =  Stat(player, 52, 6, 1, "Special Hairstyles 2", 6)
         """
         # Bald
