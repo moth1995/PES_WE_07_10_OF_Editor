@@ -52,7 +52,7 @@ class ScrollableFrame(Frame):
 
         self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: canvas.configure(
+            lambda _ : canvas.configure(
                 scrollregion=canvas.bbox("all")
             )
         )
@@ -114,10 +114,10 @@ class Table(Frame):
                     w.config(fg="#000000")
         self.event_generate("<<LeftClic>>")
 
-    def on_double_click(self, e):
+    def on_double_click(self, _):
         self.event_generate("<<DoubleClic>>")
 
-    def on_right_click(self, e):
+    def on_right_click(self, _):
         self.event_generate("<<RightClic>>")
 
 
