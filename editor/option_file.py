@@ -1,9 +1,6 @@
-import itertools
 import os
 import struct
-import subprocess
 from pathlib import Path
-from enum import Enum, auto
 
 from editor.pes_stat import Stat
 
@@ -25,9 +22,6 @@ from .shop import Shop
 from .teams import Team
 from .images import PNG
 from .kits import Kits
-
-from .utils.common_functions import bytes_to_int, zero_fill_right_shift, resource_path
-
 
 class OptionFile:
     #of_byte_length = OF_BYTE_LENGTH
@@ -272,11 +266,11 @@ class OptionFile:
 
 
             self.encrypt()
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("self.encrypt() --- %s seconds ---" % (time.time() - start_time))
             start_time = time.time()
 
             self.checksums()
-            print("--- %s seconds ---" % (time.time() - start_time))
+            print("self.checksums() --- %s seconds ---" % (time.time() - start_time))
 
         of_file = open(file_location, "wb")
 
@@ -368,16 +362,20 @@ class OptionFile:
                 #checksum += bytes_to_int(self.data, a)
                 checksum += struct.unpack("<I",self.data[a : a + 4])[0]
 
-            self.data[self.of_block[i] - 8] = checksum & 0x000000FF
-            self.data[self.of_block[i] - 7] = (
-                zero_fill_right_shift(checksum, 8) & 0x000000FF
-            )
-            self.data[self.of_block[i] - 6] = (
-                zero_fill_right_shift(checksum, 16) & 0x000000FF
-            )
-            self.data[self.of_block[i] - 5] = (
-                zero_fill_right_shift(checksum, 24) & 0x000000FF
-            )
+            # self.data[self.of_block[i] - 8] = checksum & 0x000000FF
+            # self.data[self.of_block[i] - 7] = (
+            #     zero_fill_right_shift(checksum, 8) & 0x000000FF
+            # )
+            # self.data[self.of_block[i] - 6] = (
+            #     zero_fill_right_shift(checksum, 16) & 0x000000FF
+            # )
+            # self.data[self.of_block[i] - 5] = (
+            #     zero_fill_right_shift(checksum, 24) & 0x000000FF
+            # )
+            
+            start = self.of_block[i] - 8
+
+            self.data[start : start + 4] = struct.pack('<I', checksum & 0xFFFFFFFF)            
 
     def set_clubs(self):
         """
