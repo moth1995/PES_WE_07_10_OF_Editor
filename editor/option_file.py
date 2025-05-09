@@ -111,8 +111,6 @@ class OptionFile:
         print(Kits.end_address)
         print(Team.total_slots_cm())
         Logo.start_address = Kits.end_address
-        Shop.HAS_BG = self.config['Shop']['Has Background Selector']
-        Shop.TOTAL_BGS = self.config['Shop']['Total Backgrounds']
         Shop.POINTS_OFFSET_2 = self.config['Shop']['Points Offset']
 
 
