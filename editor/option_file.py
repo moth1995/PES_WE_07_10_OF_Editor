@@ -326,9 +326,9 @@ class OptionFile:
 
                 a += 4
     
-        file = open("./test/data.bin", "wb")
-        file.write(self.data)
-        file.close()
+        # file = open("./test/data.bin", "wb")
+        # file.write(self.data)
+        # file.close()
         
     def encrypt(self):
         """
