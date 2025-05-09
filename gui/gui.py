@@ -195,7 +195,7 @@ class Gui(Tk):
             initialdir=self.last_working_dir,
             filetypes=filetypes)
         if filename == "":
-            return 0
+            return
         self.last_working_dir = str(Path(filename).parents[0])
         #isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
         if self.of == None:
@@ -270,7 +270,7 @@ class Gui(Tk):
         try:
             new_location = filedialog.asksaveasfile(initialdir=self.last_working_dir, title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
             if new_location is None:
-                return 0
+                return
             self.of.save_option_file(new_location.name)
             messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
         except Exception as e: # parent of IOError, OSError *and* WindowsError where available
@@ -280,7 +280,7 @@ class Gui(Tk):
         try:
             new_location = filedialog.asksaveasfile(initialdir=self.last_working_dir, title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
             if new_location is None:
-                return 0
+                return
             self.of.encrypted = False
             self.of.save_option_file(new_location.name)
             self.of.encrypted = self.my_config.file['option_file_data']['ENCRYPTED']
@@ -326,7 +326,7 @@ class Gui(Tk):
             )
             
             if filename=="":
-                return 0
+                return
 
             self.last_working_dir = str(Path(filename).parents[0])
 

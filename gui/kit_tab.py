@@ -71,7 +71,7 @@ class KitTab(Frame):
     def select_color(self):
         colors = colorchooser.askcolor(parent = self, title="Select a radar color", initialcolor=self.colors_rgb_var.get())
         if colors[0] is None :
-            return 0
+            return
         self.colors_rgb_var.set(colors[1])
         self.btn_radar_color.configure(bg=colors[1])
 

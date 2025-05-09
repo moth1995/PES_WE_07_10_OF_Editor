@@ -791,7 +791,7 @@ class PlayerStatsWindow(Toplevel):
             initialdir=self.last_working_dir,
             filetypes=filetypes)
         if filename == "":
-            return 0
+            return
         self.last_working_dir = str(Path(filename).parents[0])
         file_src_contents = common_functions.read_file_to_mem(filename)
         if common_functions.write_file_from_mem(file_dst_location, file_src_contents):

@@ -77,7 +77,7 @@ class ExportToCSVWindow(Toplevel):
             )
 
             if filename is None:
-                return 0
+                return
             self.last_working_dir = str(Path(filename.name).parents[0])
             #print(filename.name)
             create_csv(filename.name)

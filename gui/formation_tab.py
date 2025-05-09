@@ -107,7 +107,7 @@ class FormationTab(Frame):
         if idx is None :
             self.role_cmb.config(state="disabled",)
             self.role_cmb.set("")
-            return 0
+            return
         self.role_cmb.config(state="readonly",)
         self.role_cmb.set(self.roles[self.formation.selected_item])
 

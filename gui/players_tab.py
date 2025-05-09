@@ -283,12 +283,12 @@ class PlayersTab(Frame):
     def transfer(self, table_src:Table, table_dst:Table, team_src:Team, team_dst:Team):
         table_src_item = table_src.selected_row
         if (table_src_item is None or table_src_item >= team_src.current_players_in_team):
-            return 0
+            return
         if team_src.players[table_src_item].idx in [player.idx for player in team_dst.players if player is not None]:
-            return 0
+            return
         if team_dst.total_available_slots == 0:
             messagebox.showerror(self.appname, "Team is full you cant transfer more players here!", parent=self )
-            return 0
+            return
 
 
 
@@ -329,7 +329,7 @@ class PlayersTab(Frame):
                 temp_team.players = temp_team.players
                 temp_team.dorsals = temp_team.dorsals
                 #messagebox.showerror(self.appname, f"Player: {team_src.players[table_src_item].name} is registerd on {self.teams_filter_list[team_src.players[table_src_item].club]} national team, you need to release it there first")
-                #return 0             
+                #return             
             team_src.players[table_src_item].club_id = team_dst.idx
             team_src.players[table_src_item].free_agent = False
 
@@ -351,7 +351,7 @@ class PlayersTab(Frame):
                 temp_team.dorsals = temp_team.dorsals
 
                 #messagebox.showerror(self.appname, f"Player: {self.team_a.players[item_a].name} is registerd on {self.teams_filter_list[self.team_a.players[item_a].national_id]} national team, you need to release it there first")
-                #return 0
+                #return
 
             team_src.players[table_src_item].national_id = team_dst.idx
 
@@ -369,7 +369,7 @@ class PlayersTab(Frame):
     def release_player(self, table:Table, team:Team):
         table_item_id = table.selected_row
         if table_item_id is None or table_item_id >= team.current_players_in_team:
-            return 0
+            return
         player = self.of.get_player_by_idx(team.players[table_item_id].idx)
         if team.is_club:
             player.free_agent = True
@@ -402,7 +402,7 @@ class PlayersTab(Frame):
             item_b >= self.team_b.current_players_in_team
         ):
             # if they're the same item aka player, and the same team, or if any item was selected we don't do anything
-            return 0
+            return
         if self.team_a.idx == self.team_b.idx:
             self.team_a.players[item_a],self.team_a.players[item_b] = self.team_a.players[item_b], self.team_a.players[item_a]
             self.team_a.dorsals[item_a], self.team_a.dorsals[item_b] = self.team_a.dorsals[item_b], self.team_a.dorsals[item_a]
@@ -439,7 +439,7 @@ class PlayersTab(Frame):
 
 
                     #messagebox.showerror(self.appname, f"Player: {self.team_b.players[item_b].name} is registerd on {self.teams_filter_list[self.team_b.players[item_b].national_id]} national team, you need to release it there first")
-                    #return 0             
+                    #return             
                 self.team_a.players[item_a].national_id = None
                 self.team_a.players[item_a].club_id = self.team_b.idx
                 self.team_a.players[item_a].free_agent = False
@@ -467,7 +467,7 @@ class PlayersTab(Frame):
                     temp_team.dorsals = temp_team.dorsals
                     
                     #messagebox.showerror(self.appname, f"Player: {self.team_a.players[item_a].name} is registerd on {self.teams_filter_list[self.team_a.players[item_a].national_id]} national team, you need to release it there first")
-                    #return 0             
+                    #return             
 
                 #if the second team is national we follow this logic                    
                 self.team_a.players[item_a].national_id = self.team_b.idx
@@ -489,10 +489,10 @@ class PlayersTab(Frame):
 
     def swap_all(self):
         if self.team_a.idx == self.team_b.idx:
-            return 0
+            return
         if self.team_a.max_players != self.team_b.max_players:
             messagebox.showerror(self.appname, "Sorry, you can't Swap a National team with a Club team", parent=self )
-            return 0
+            return
         self.team_a.players,self.team_b.players = self.team_b.players, self.team_a.players
         for player in self.team_a.players:
             if player is None: continue
@@ -522,10 +522,10 @@ class PlayersTab(Frame):
 
         if player.idx in [player.idx for player in team.players if player is not None]:
             # if the player was already on the team there's not need to tranfer it again
-            return 0
+            return
         if team.total_available_slots == 0:
             messagebox.showerror(self.appname, "Team is full you cant transfer more players here!", parent=self )
-            return 0
+            return
         
         if team.is_national_team and player.national_id is not None:
             temp_team = Team(self.of, player.national_id)
@@ -541,7 +541,7 @@ class PlayersTab(Frame):
             #    self.appname, 
             #    f"Player: {player.name} is registerd on {self.teams_filter_list[player.national_id]} national team, you need to release it there first"
             #)
-            #return 0
+            #return
         elif team.is_national_team and player.national_id is None:
             player.national_id = team.idx
         elif not team.is_national_team and player.club_id is None:
@@ -562,7 +562,7 @@ class PlayersTab(Frame):
             #    self.appname, 
             #    f"Player: {player.name} is registerd on {self.teams_filter_list[player.club_id]} club team, you need to release it there first"
             #)
-            #return 0
+            #return
 
         new_slot = team.players.index(None)
         team.players[new_slot] = player
@@ -601,7 +601,7 @@ class PlayersTab(Frame):
         else:
             self.team_b = team
         #if team.formation is None:
-            #return 0
+            #return
         
         self.update_transfer_buttons()
 
@@ -651,7 +651,7 @@ class PlayersTab(Frame):
             self.set_player_info_label(player)
     def on_table_right_click(self, table:Table, team:Team, team_cmb:Combobox):
         if team.real_idx is None:
-            return 0
+            return
         team_config_window = TeamConfigWindow(self, team, team_cmb)
         team_config_window.mainloop()
 

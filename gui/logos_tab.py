@@ -48,19 +48,20 @@ class LogosTab(Frame):
     def open_png(self,i):
         png_location = filedialog.askopenfilename(initialdir=".",title="Open a PNG file", filetypes=(("PNG files","*.png"),("All files", "*")))
         if png_location == "":
-            return 0
+            return
         with open(png_location, "rb") as png_f:
-            pes_img = PESImg(bytearray(png_f.read()))
+            pes_img = PESImg()
+            pes_img.from_png(bytearray(png_f.read()))
         if pes_img.width != 32 or pes_img.height != 32 or pes_img.bpp!=4:
             messagebox.showerror(title = self.appname, message = "Image must be 32x32 and 16 colours indexed")
-            return 0
+            return
         self.of.logos[i].update_logo(pes_img.pes_palette, pes_img.pes_idat)
         self.reload_logos()
 
     def write_png(self,img_bytes):
         file = filedialog.asksaveasfile(initialdir=".",title="Save as PNG", mode='wb', filetypes=(("PNG files","*.png"),("All files", "*")), defaultextension=".png")
         if file is None:
-            return 0
+            return
         with open(file.name,'wb') as img:
             img.write(img_bytes)
         messagebox.showinfo(title = self.appname, message = f"Image exported successfully at {file.name}")
