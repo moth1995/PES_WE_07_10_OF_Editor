@@ -6,8 +6,8 @@ VSVersionInfo(
   ffi=FixedFileInfo(
 # filevers and prodvers should be always a tuple with four items: (1, 2, 3, 4)
 # Set not needed items to zero 0.
-filevers=(1, 0, 1, 30920),
-prodvers=(1, 0, 1, 30920),
+filevers=(1, 1, 0, 30920),
+prodvers=(1, 1, 0, 30920),
 # Contains a bitmask that specifies the valid bits 'flags'r
 mask=0x3f,
 # Contains a bitmask that specifies the Boolean attributes of the file.
@@ -31,12 +31,12 @@ StringFileInfo(
     u'040904B0',
     [StringStruct(u'CompanyName', u'PES 5 Indie Team'),
     StringStruct(u'FileDescription', u'OF Editor for PES/WE games from 2007 to 2010'),
-    StringStruct(u'FileVersion', u'1.0.1'),
+    StringStruct(u'FileVersion', u'1.1.0'),
     StringStruct(u'InternalName', u'OF Editor'),
     StringStruct(u'LegalCopyright', u'Copyright (c) PES 5 Indie Team'),
     StringStruct(u'OriginalFilename', u'OF Editor 2007-2010.exe'),
     StringStruct(u'ProductName', u'Subversion'),
-    StringStruct(u'ProductVersion', u'1.0.1 (r240521)')])
+    StringStruct(u'ProductVersion', u'1.1.0 (r240521)')])
   ]), 
 VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
