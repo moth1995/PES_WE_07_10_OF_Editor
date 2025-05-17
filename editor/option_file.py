@@ -45,7 +45,7 @@ class OptionFile:
         start_time = time.time()
 
         self.read_option_file()
-        print("--- %s seconds ---" % (time.time() - start_time))
+        print("self.read_option_file()--- %s seconds ---" % (time.time() - start_time))
         Player.start_address = self.config['option_file_data']['OF_BLOCK'][4]
         Player.start_address_edited = self.config['option_file_data']['OF_BLOCK'][3]
         Player.total_edit = int(self.config['option_file_data']['OF_BLOCK_SIZE'][3] / Player.size)
@@ -102,12 +102,18 @@ class OptionFile:
         Stat.growth_types_late = self.config["GROWTH TYPES"]["LATE"]
         Stat.growth_types_late_lasting = self.config["GROWTH TYPES"]["LATE LASTING"]
 
-        print(Kits.end_address)
-        print(Team.total_slots_cm())
+        print("Kits.end_address", Kits.end_address)
+        print("Team.total_slots_cm()", Team.total_slots_cm())
         Logo.start_address = Kits.end_address
         Shop.POINTS_OFFSET_2 = self.config['Shop']['Points Offset']
+        
+        self.load_of_data()
+        #print("--- %s seconds ---" % (time.time() - start_time))
+        #self.testing()
+        print("self.teams[0].squad_start_address", self.teams[0].squad_start_address)
 
 
+    def load_of_data(self):
         self.set_clubs()
         self.set_clubs_names()
         self.set_logos()
@@ -122,9 +128,6 @@ class OptionFile:
         self.set_stadiums_names()
         self.set_shop()
         self.set_free_agents()
-        #print("--- %s seconds ---" % (time.time() - start_time))
-        #self.testing()
-        print(self.teams[0].squad_start_address)
 
     def testing(self):
         """

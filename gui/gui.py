@@ -6,10 +6,10 @@ from tkinter.ttk import Notebook
 
 import yaml
 
-from editor import OptionFile, Team, Player,common_functions, create_csv, write_players, load_csv
+from editor import OptionFile, Team, Player,common_functions, load_csv
 from editor.utils.constants import *
 
-from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab, Config
+from gui import ClubTab, LogosTab, ShopTab, StadiumLeagueTab, PlayersTab, ImportTab, Config
 from gui.export_to_csv_window import ExportToCSVWindow
 from gui.face_hair_folder_window import FaceHairFolderWindow
 
@@ -33,6 +33,9 @@ class Gui(Tk):
         self.geometry('%dx%d+%d+%d' % (MAIN_WINDOW_W, MAIN_WINDOW_H, x, y))
         self.iconbitmap(default=common_functions.resource_path("resources/img/pes_indie.ico"))
         load_defaults = False
+        
+        self.of2 : OptionFile= None
+        
         try:
             with open(os.getcwd() + "/" + self.current_exe_name + ".yaml") as stream:
                 self.settings_file = yaml.safe_load(stream)
@@ -57,8 +60,10 @@ class Gui(Tk):
 
         self.my_menu.add_cascade(label="File", menu=self.file_menu)
         self.file_menu.add_command(label="Open", command=self.open)
+        self.file_menu.add_command(label="Open OF2", command=self.open_of2)
         self.file_menu.add_command(label="Save", state='disabled',command=self.save_btn_action)
         self.file_menu.add_command(label="Save as...", state='disabled', command=self.save_as_btn_action)
+        self.file_menu.add_command(label="Save as OF encrypted", state='disabled',command=self.save_of_encrypted_btn_action)
         self.file_menu.add_command(label="Save as OF decrypted", state='disabled',command=self.save_of_decrypted_btn_action)
         self.file_menu.add_command(label="Exit", command= lambda : self.stop())
 
@@ -150,6 +155,8 @@ class Gui(Tk):
 
         self.shop_tab.publish()
 
+        self.import_tab.publish()
+
         #Placing tabs and container in the root
 
         self.tabs_container.pack()
@@ -161,6 +168,7 @@ class Gui(Tk):
         self.tabs_container.add(self.clubs_tab, text="Clubs")
         self.tabs_container.add(self.stadium_league_tab, text="Stadiums & Leagues")
         self.tabs_container.add(self.logos_tab, text="Logos")
+        self.tabs_container.add(self.import_tab, text="Import From OF2")
         #self.tabs_container.add(self.shop_tab, text="Shop")
 
         self.tabs_container.bind('<<NotebookTabChanged>>', self.on_tab_change)
@@ -194,11 +202,11 @@ class Gui(Tk):
             title=f'{self.appname} Select your option file',
             initialdir=self.last_working_dir,
             filetypes=filetypes)
-        if filename == "":
+        if not filename:
             return
         self.last_working_dir = str(Path(filename).parents[0])
         #isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
-        if self.of == None:
+        if self.of is None:
             self.of = OptionFile(filename,self.my_config.file)
         else:
             old_of = self.of
@@ -224,7 +232,56 @@ class Gui(Tk):
                 #print(player.idx, player.name, player.basic_settings.growth_type())
         self.reload_gui_items()
 
-    def reload_gui_items(self):
+    def open_of2(self):
+        """
+        Shows the user an interactive menu to select their afl file and then update the whole gui
+        enabling widgets
+
+        Returns:
+            Bolean: Returns False if the user hits the "cancel" button, otherwise does their actions
+        """
+        filetypes = [
+            ('All files', '*.*'),
+            ("PES/WE PS2 Option File", ".psu .xps"),
+            ("PES/WE PSP Option File", ".bin"),
+            ("PES/WE 3DS Option File", ".dat"),
+        ]
+
+        filename = filedialog.askopenfilename(
+            title=f'{self.appname} Select your option file',
+            initialdir=self.last_working_dir,
+            filetypes=filetypes)
+        if not filename:
+            return
+        self.last_working_dir = str(Path(filename).parents[0])
+        #isencrypted = messagebox.askyesno(title=self.appname, message="Is your option file encrypted?")
+        if self.of2 is None:
+            self.of2 = OptionFile(filename,self.my_config.file)
+        else:
+            old_of = self.of2
+            try:
+                self.of2 = OptionFile(filename,self.my_config.file)
+            except Exception as e:
+                self.of2 = old_of
+                messagebox.showerror(
+                    self.appname,
+                    f"Fail to open new option file, previous option file restore, code error: {e}"
+                )
+        """
+        try :
+            f = open("./test/we2007.bin","wb")
+            f.write(self.of.data)
+            f.close()
+            print("of desencriptado guardado")
+        except Exception as e:
+            print(e)
+        """
+        #for player in self.of.players:
+            #if player.basic_settings.growth_type.get_growth_type_name() == "Unknown":
+                #print(player.idx, player.name, player.basic_settings.growth_type())
+        self.reload_gui_items()
+
+    def reload_gui_items(self, args = {}):
         """
         Refresh the whole gui once there's an update in one of the elements such as a new afl file or any file name change, etc
 
@@ -238,6 +295,10 @@ class Gui(Tk):
         self.edit_menu.entryconfig("Import from CSV", state="normal")
         self.edit_menu.entryconfig("Select Face/Hair Folder", state="normal")
         #self.edit_menu.entryconfig("Convert OF to DB (Experimental)", state="normal")
+        prev_selection = self.tabs_container.select()
+        current_index = -1
+        if prev_selection:
+            current_index = self.tabs_container.index("current")
         self.tabs_container.destroy()
         self.tabs_container=Notebook(self)
         self.players_tab = PlayersTab(self.tabs_container,self.of, MAIN_WINDOW_W, MAIN_WINDOW_H, self.appname)
@@ -245,7 +306,11 @@ class Gui(Tk):
         self.stadium_league_tab = StadiumLeagueTab(self.tabs_container,self.of, MAIN_WINDOW_W, MAIN_WINDOW_H, self.appname)
         self.logos_tab = LogosTab(self.tabs_container,self.of, MAIN_WINDOW_W, MAIN_WINDOW_H, self.appname)
         self.shop_tab = ShopTab(self.tabs_container,self.of, MAIN_WINDOW_W, MAIN_WINDOW_H, self.appname)
+        self.import_tab = ImportTab(self.tabs_container, self.of, self.of2, MAIN_WINDOW_W, MAIN_WINDOW_H, self.appname)
+        self.import_tab.bind("<<ReloadRequest>>", self.reload_gui_items)
         self.publish()
+        if prev_selection and current_index >= 0:
+            self.tabs_container.select(current_index)
 
     def save_btn_action(self):
         try:
@@ -269,7 +334,7 @@ class Gui(Tk):
     def save_as_btn_action(self):
         try:
             new_location = filedialog.asksaveasfile(initialdir=self.last_working_dir, title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
-            if new_location is None:
+            if not new_location:
                 return
             self.of.save_option_file(new_location.name)
             messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
@@ -279,9 +344,21 @@ class Gui(Tk):
     def save_of_decrypted_btn_action(self):
         try:
             new_location = filedialog.asksaveasfile(initialdir=self.last_working_dir, title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
-            if new_location is None:
+            if not new_location:
                 return
             self.of.encrypted = False
+            self.of.save_option_file(new_location.name)
+            self.of.encrypted = self.my_config.file['option_file_data']['ENCRYPTED']
+            messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
+        except Exception as e: # parent of IOError, OSError *and* WindowsError where available
+            messagebox.showerror(title=self.appname,message=f"Error while saving, error type={e}, try running as admin or saving into another location")
+
+    def save_of_encrypted_btn_action(self):
+        try:
+            new_location = filedialog.asksaveasfile(initialdir=self.last_working_dir, title=self.appname, mode='wb', filetypes=([("All files", "*")]), defaultextension=f"{self.of.extension}")
+            if not new_location:
+                return
+            self.of.encrypted = True
             self.of.save_option_file(new_location.name)
             self.of.encrypted = self.my_config.file['option_file_data']['ENCRYPTED']
             messagebox.showinfo(title=self.appname,message=f"All changes saved at {self.of.file_location}")
@@ -291,7 +368,7 @@ class Gui(Tk):
     def convert_of_to_db(self):
         try:
             folder_selected = filedialog.askdirectory(initialdir=self.last_working_dir,title=self.appname, )
-            if folder_selected == "":
+            if not folder_selected:
                 return
             players_file = open(folder_selected + "/db.bin_000", "wb")
             for i in range(Player.first_unused):
@@ -325,7 +402,7 @@ class Gui(Tk):
                 filetypes=filetypes
             )
             
-            if filename=="":
+            if not filename:
                 return
 
             self.last_working_dir = str(Path(filename).parents[0])
