@@ -26,7 +26,12 @@ class ImportTab(Frame):
                 
     def import_block_from_of2(self, block_index):
         
-        self.of.of_block[block_index] = self.of2.of_block[block_index]
+        offset = self.of.of_block[block_index]
+        size = self.of.of_block_size[block_index]
+        
+        print(f"import_block_from_of2:: offset: {offset}, size: {size}")
+        
+        self.of.data[offset : offset + size] = self.of2.data[offset : offset + size]
         
         self.of.load_of_data()
         
